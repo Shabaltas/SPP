@@ -1,0 +1,19 @@
+.header {
+    grid-area: h;
+    background-color: #18150e;
+    height: 60px;
+    margin: 0;
+}
+
+.header__img {
+    float: left;
+}
+
+.header__img img {
+    height: 50px;
+}
+
+.header__title {
+    float: left;
+    color: antiquewhite;
+}

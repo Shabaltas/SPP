@@ -1,0 +1,17 @@
+.FilesDiv {
+  display: flex;
+  margin: 2%;
+}
+
+.FilesDiv__dropzone {
+  height: 100%;
+  cursor: pointer;
+}
+
+.FilesDiv__dropzone :hover {
+  border: 2px solid grey;
+}
+
+.FilesDiv__dropzone .selected {
+  border: 2px solid grey;
+}

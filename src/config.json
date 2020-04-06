@@ -1,0 +1,14 @@
+{
+  "endpoints": {
+    "login": "http://localhost:1234/login",
+    "registration": "http://localhost:1234/registration",
+    "tasks": "http://localhost:1234/tasks",
+    "tasksCreate": "http://localhost:1234/tasks/create"
+  },
+  "routes": {
+    "tasks": "/tasks",
+    "tasksCreate": "/tasks/create",
+    "login": "/login",
+    "registration": "/registration"
+  }
+}

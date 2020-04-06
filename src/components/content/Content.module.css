@@ -1,0 +1,13 @@
+.content {
+    grid-area: c;
+    display: grid;
+    width: auto;
+    grid-template-areas:
+            "n m";
+    grid-template-columns: 2fr 10fr;
+    grid-gap: 10px; /*расстояние между колонками*/
+}
+
+.main {
+    grid-area: m;
+}

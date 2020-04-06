@@ -1,0 +1,6 @@
+nav {
+    grid-area: n;
+    height: available;
+    width: inherit;
+}
+
