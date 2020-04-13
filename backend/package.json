@@ -18,12 +18,15 @@
     "css-loader": "^3.4.2",
     "express": "^4.17.1",
     "fs-extra": "latest",
+    "http": "0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "keymirror": "^0.1.1",
     "less": "^2.6.0",
     "moment": "latest",
     "mongoose": "*",
     "multer": "^1.4.2",
+    "path": "^0.12.7",
+    "socket.io": "^2.3.0",
     "webpack": "^4.0.0"
   }
 }

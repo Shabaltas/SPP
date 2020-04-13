@@ -20,15 +20,15 @@ class Task extends React.Component {
     };
 
     handleDescriptionChange(event) {
-        this.setState({ description: event.target.value });
+        this.setState({description: event.target.value});
     };
 
     handleTitleChange(event) {
-        this.setState({ title: event.target.value });
+        this.setState({title: event.target.value});
     };
 
     handleColorChange(newColor) {
-        this.setState({ color: newColor });
+        this.setState({color: newColor});
     };
 
     handleTaskUpdate() {
@@ -43,7 +43,7 @@ class Task extends React.Component {
     };
 
     render() {
-        const style = { backgroundColor: this.state.color };
+        const style = {backgroundColor: this.state.color};
         if (this.state.isUpdating) {
             return (
                 <div className='Task' style={style}>
@@ -60,7 +60,7 @@ class Task extends React.Component {
                         value={this.state.description}
                         onChange={this.handleDescriptionChange.bind(this)}
                     />
-                   {/* <FilesDiv onChange={files => this.handleFileAdd(files)}/>
+                    {/* <FilesDiv onChange={files => this.handleFileAdd(files)}/>
                     <div className='Task__attachments'>
                         {
                             this.props.attachments.map(file => {
@@ -83,8 +83,7 @@ class Task extends React.Component {
                     </button>
                 </div>
             )
-        }
-        else return (
+        } else return (
             <div className='Task' style={style} onDoubleClick={() => {
                 if (this.context.currentUser) {
                     this.setState({isUpdating: true});
@@ -95,17 +94,21 @@ class Task extends React.Component {
                     <h4 className='Task__title'>{this.props.title}</h4>
                     {
                         this.context.currentUser ?
-                            <button className = 'Task__del' onClick={this.props.onDelete}> × </button>
+                            <button className='Task__del' onClick={this.props.onDelete}> × </button>
                             :
                             <></>
                     }
                 </div>
-                <div className='Task__description' onChange={this.handleDescriptionChange.bind(this)}>{this.props.children}</div>
+                <div className='Task__description'
+                     onChange={this.handleDescriptionChange.bind(this)}>{this.props.children}</div>
                 <div className='Task__attachments'>
                     {
                         this.props.attachments.map((file, i) => {
                             const pathTofFile = `/${this.props._id}/${file}`;
-                            return (<File key={i} filepath={pathTofFile} filename={file} onFileDelete={() => {
+                            return (<File onFileDownload={() =>
+                                this.props.onFileDownload({filepath: `${pathTofFile}`})
+                            }
+                                          key={i} filepath={pathTofFile} filename={file} onFileDelete={() => {
                                 this.setState({attachments: this.props.attachments.splice(i, 1)});
                                 this.handleTaskUpdate.bind(this)();
                                 this.props.onFileDelete({filename: `${file}`, filepath: `${pathTofFile}`});

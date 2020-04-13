@@ -2,3 +2,7 @@
   background-color: transparent;
   border: none;
 }
+
+.file_download {
+  text-decoration: underline;
+}

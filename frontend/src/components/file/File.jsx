@@ -1,17 +1,15 @@
 import React from 'react'
 import './File.css';
 
-class File extends React.Component{
+class File extends React.Component {
     render() {
         const style = {
             width: 'max-content'
         };
         return (<div style={style}>
-
-                <a href={this.props.filepath} download>{this.props.filename}</a>
-                <button className="file_delete" onClick={this.props.onFileDelete}> × </button>
-
-            </div>);
+            <a className="file_download" onClick={this.props.onFileDownload}>{this.props.filename}</a>
+            <button className="file_delete" onClick={this.props.onFileDelete}> ×</button>
+        </div>);
     }
 }
 

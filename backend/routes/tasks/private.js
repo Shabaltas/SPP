@@ -10,11 +10,11 @@ router.post('/create', upload.array('file'), (req, res) => {
     data.attachments = data.attachments.split(',').filter(filename => filename.length > 0);
     db.createTask(data)
         .then(data => {
-            const dir = 'frontend/public/' + data._id;
+            const dir = 'public/' + data._id;
             /* if (!fs.existsSync(dir))
                  fs.mkdir(dir, (err) => {console.log(err)});*/
-            fs.copySync('frontend/public/temp', dir);
-            fs.remove('frontend/public/temp', (err) => {console.log(err)});
+            fs.copySync('public/temp', dir);
+            fs.remove('public/temp', (err) => {console.log(err)});
             res.send(data)
         })
         .catch(err => {
