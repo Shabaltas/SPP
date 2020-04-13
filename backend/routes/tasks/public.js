@@ -3,6 +3,7 @@ const router = express.Router();
 const Mongoose = require("mongoose");
 const {upload} = require("../upload");
 const db = require('../../db/TaskDBUtils');
+const path = require('path');
 
 router.get('/', (req, res) => {
     db.allTasks()
@@ -36,6 +37,23 @@ router.get('/:id', (req, res) => {
             res.writeHead(500, {message: 'DB issue'});
             res.end();
         });
+});
+
+router.get('/file/:id/:filename', (req, res) => {
+    const filepath = path.join(path.dirname(require.main.filename),`public/${req.params.id}/${req.params.filename}`);
+    console.log(filepath);
+    res.download(filepath, req.params.filename, err => {
+        if (err) {
+            console.log(err);
+            /*res.writeHead(500, {message: `File ${req.body.filename} wasn\'t downloaded}`});
+            res.end();*/
+        } else {
+            console.log("OK")
+            /*
+                        res.status(200).end();
+            */
+        }
+    });
 });
 
 module.exports = router;

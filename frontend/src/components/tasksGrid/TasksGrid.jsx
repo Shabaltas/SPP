@@ -72,6 +72,10 @@ class TasksGrid extends React.Component {
             })
     };
 
+    onFileDownload = (data) => {
+        window.open(endpoints.tasks + '/file' + data.filepath);
+    }
+
     render() {
         const masonryOptions = {
             itemSelector: '.Task',
@@ -107,6 +111,7 @@ class TasksGrid extends React.Component {
                             }}
                             onStartUpdate={() => this.componentWillMount()}
                             onFileDelete={this.onFileDelete}
+                            onFileDownload={this.onFileDownload}
                             color={task.color}
                             attachments={task.attachments}
                         >
