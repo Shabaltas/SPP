@@ -2,7 +2,7 @@ const config = require('./config.json');
 const jwt = require('jsonwebtoken');
 module.exports.isAuthorized = (request, response, next) => {
     let token = request.headers.authorization;
-    console.log(token);
+    console.log("isAuth", token);
     if (!token) {
         response.sendStatus(403);
         return;

@@ -4,12 +4,11 @@ import ColorPicker from '../colorPicker/ColorPicker.jsx';
 
 import './TaskEditor.css';
 import SimpleDatePicker from '../datepicker/SimpleDatePicker.jsx';
-import FilesDiv from "../filesDiv/FilesDiv.jsx";
-import {RestRequest} from "../../service/requestService";
 import configs from '../../config.json';
-
+import socket from '../../socket/socket';
+import {AuthContext} from "../authprovider/AuthProvider";
+import moment from "moment";
 const routes = configs.routes;
-const endpoints = configs.endpoints;
 class TaskEditor extends React.Component {
     constructor(props) {
         super(props);
@@ -17,8 +16,7 @@ class TaskEditor extends React.Component {
             title: '',
             description: '',
             color: '#FFFFFF',
-            attachments: [],
-            uploaded: true
+            dueToDate: moment().toDate()
         };
     };
 
@@ -33,28 +31,22 @@ class TaskEditor extends React.Component {
     handleColorChange(newColor) {
         this.setState({ color: newColor });
     };
+    handleDateChange(date) {
+        this.setState({dueToDate: date});
+    }
 
     handleTaskAdd() {
-        while (!this.state.uploaded) {}
-        var data = new FormData();
-        this.state.attachments.forEach(file => {
-            data.append("file", file)
+        socket.on('createdTasks', resp => this.props.history.push(routes.tasks));
+        /* TODO add error component in content */
+        socket.on('serverError', resp => this.props.history.push('/error'));
+        socket.emit('createTask', {
+            title: this.state.title,
+            description: this.state.description,
+            color: this.state.color,
+            userId: this.context.currentUser.id,
+            dueToDate: this.state.dueToDate
         });
-        data.append("title", this.state.title);
-        data.append("description", this.state.description);
-        data.append("color", this.state.color);
-        data.append("attachments", this.state.attachments.flatMap(file => file.name));
-        RestRequest.post(endpoints.tasksCreate, data)
-            .then(res => {
-                this.props.history.push(routes.tasks);
-            })
-            .catch(reason => {
-                if (reason.response.status === 401 || reason.response.status === 403) {
-                    this.props.history.push(routes.login);
-                }
-            })
     };
-
 
     render() {
         const style = {
@@ -76,15 +68,15 @@ class TaskEditor extends React.Component {
                     value={this.state.description}
                     onChange={this.handleDescriptionChange.bind(this)}
                 />
-                <SimpleDatePicker/>
-                <FilesDiv
+                <SimpleDatePicker onChange={this.handleDateChange.bind(this)}/>
+                {/*<FilesDiv
                     onChange={
                         files => {
                             this.setState({ uploaded: false, attachments: files }, () => {
                                 this.setState({uploaded: true});
                                 })
                             }}
-                />
+                />*/}
                 <div className='TaskEditor__footer'>
                     <ColorPicker
                         value={this.state.color}
@@ -102,4 +94,5 @@ class TaskEditor extends React.Component {
     }
 }
 
+TaskEditor.contextType = AuthContext;
 export default withRouter(TaskEditor);

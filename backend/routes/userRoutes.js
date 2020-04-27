@@ -6,7 +6,7 @@ const saltRounds = 10;
 const db = require("../db/UserDBUtils");
 
 router.post('/registration', (req, res) => {
-    console.log(req.body);
+    console.log("reg", req.body);
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
        if (err) {
            console.log(err);
@@ -21,7 +21,7 @@ router.post('/registration', (req, res) => {
            db.createUser(user)
                .then((val) => {
                    res.status(200).send({
-                       token: generationToken(user)
+                       token: generationToken(val)
                    })
                })
                .catch((err) => {
@@ -60,9 +60,9 @@ router.post('/login', (req, res) => {
 
 let generationToken = (user) => {
     return jwt.sign({
+        id: user._id,
         name: user.name,
         email: user.email,
-        surname: user.surname
     }, config.auth.secretKey, {expiresIn: config.auth.expires});
 };
 
@@ -71,7 +71,5 @@ function processUserNotFound(res) {
         message: 'User not found.'
     });
 }
-
-
 
 module.exports = router;

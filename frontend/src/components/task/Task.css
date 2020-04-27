@@ -49,3 +49,16 @@
     grid-template-columns: 1fr 20px;
     grid-template-rows: min-content;
 }
+
+.days_notice {
+    margin: 1px;
+    font: status-bar;
+}
+.today {
+    color: green;
+    font-weight: bolder;
+}
+.missed {
+    color: #ce292f;
+    font-weight: bold;
+}

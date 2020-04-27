@@ -1,4 +1,4 @@
-import api from "../api";
+import * as api from "../api";
 const jwt_decode = require("jwt-decode");
 
 const afterLogin = response => {
@@ -13,8 +13,8 @@ const getUserFromStorage = () => {
     if (!token) return null;
     let data = jwt_decode(token);
     return {
+        id: data.id,
         name: data.name,
-        surname: data.surname,
         email: data.email
     };
 };

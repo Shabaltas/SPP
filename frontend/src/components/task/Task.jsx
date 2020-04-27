@@ -2,7 +2,6 @@ import React from 'react';
 
 import './Task.css';
 import '../taskEditor/TaskEditor.css';
-import File from "../file/File.jsx";
 import ColorPicker from "../colorPicker/ColorPicker.jsx";
 import {AuthContext} from "../authprovider/AuthProvider";
 
@@ -15,6 +14,7 @@ class Task extends React.Component {
             description: this.props.children,
             title: this.props.title,
             color: this.props.color,
+            daysLeft: this.props.daysLeft,
             attachments: this.props.attachments
         };
     };
@@ -60,6 +60,7 @@ class Task extends React.Component {
                         value={this.state.description}
                         onChange={this.handleDescriptionChange.bind(this)}
                     />
+                    <h3>Days left: {this.state.daysLeft}</h3>
                     {/* <FilesDiv onChange={files => this.handleFileAdd(files)}/>
                     <div className='Task__attachments'>
                         {
@@ -101,7 +102,15 @@ class Task extends React.Component {
                 </div>
                 <div className='Task__description'
                      onChange={this.handleDescriptionChange.bind(this)}>{this.props.children}</div>
-                <div className='Task__attachments'>
+                {
+                    this.state.daysLeft === 0
+                    ? <h5 className='days_notice today'>Today</h5>
+                    : this.state.daysLeft < 0
+                        ? <h4 className='days_notice missed'>Missed</h4>
+                        : <div className='days_notice'>Days left: {this.state.daysLeft}</div>
+                }
+
+                {/*<div className='Task__attachments'>
                     {
                         this.props.attachments.map((file, i) => {
                             const pathTofFile = `/${this.props._id}/${file}`;
@@ -115,7 +124,7 @@ class Task extends React.Component {
                             }}/>)
                         })
                     }
-                </div>
+                </div>*/}
             </div>
         );
     }

@@ -1,5 +1,4 @@
 import React from 'react';
-import configs from "../../config";
 import Content from "../content/Content";
 import {AuthContext} from "../authprovider/AuthProvider";
 import Header from "../header/Header";

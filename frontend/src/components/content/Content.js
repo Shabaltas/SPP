@@ -17,7 +17,8 @@ class Content extends React.Component {
                 <BrowserRouter>
                     <NavbarMenu/>
                     <div className={s.main}>
-                        {this.context.currentUser ?
+                        {
+                            this.context.currentUser ?
                             <Switch>
                                 <Route exact path={routes.tasksCreate} component={TaskEditor}/>
                                 <Route exact path={routes.tasks} component={TasksGrid}/>
@@ -27,7 +28,6 @@ class Content extends React.Component {
                             </Switch>
                             :
                             <Switch>
-                                <Route exact path={routes.tasks} component={TasksGrid}/>
                                 <Route exact path={routes.login} component={Login}/>
                                 <Route exact path={routes.registration} component={Registration}/>
                                 <Redirect to={routes.login}/>

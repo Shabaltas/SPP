@@ -22,7 +22,6 @@ module.exports.deleteUser = function (id) {
 };
 
 module.exports.findUser = function (data) {
-    console.log(data);
     return User.findOne(data);
 };
 

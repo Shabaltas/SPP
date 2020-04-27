@@ -14,14 +14,19 @@ import configs from "../../config.json";
 class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {error: null}
+        this.state = {
+            error: null,
+            email: '',
+            password: ''
+        }
     }
 
     login = (event) => {
+        event.preventDefault();
         const email = event.target.elements[0].value;
         const password = event.target.elements[2].value;
-        this.context.login(email, password);
-        this.props.history.push(configs.routes.tasks);
+        this.context.login(email, password)
+            .then(() => this.props.history.push(configs.routes.tasks))
     };
 
     render() {

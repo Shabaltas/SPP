@@ -12,20 +12,15 @@ class SimpleDatePicker extends React.Component {
     };
 
     handleChange(date) {
-        console.log(this);
-        console.log(date);
         this.setState({startDate: date});
+        this.props.onChange(date);
     };
 
     render() {
         return <DatePicker
             selected={this.state.startDate}
             onChange={(date) => this.handleChange(date)}
-            showTimeSelect
-            timeFormat="hh:mm"
-            timeIntervals={15}
-            timeCaption="time"
-            dateFormat="MM-dd-yyyy hh:mm a"
+            dateFormat="MM-dd-yyyy"
         />
     }
 

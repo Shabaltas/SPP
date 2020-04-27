@@ -8,6 +8,7 @@ let TaskSchema = new Schema( {
     dueToDate: Date,
     status: {type: Number/*, required: true*/},
     color: String,
+    userId: {type: String, required: true},
     attachments: Array
 });
 module.exports.Statuses = Object.freeze({

@@ -5,6 +5,8 @@ import Task from '../task/Task.jsx';
 import {withRouter} from 'react-router-dom';
 import {RestRequest} from "../../service/requestService";
 import configs from '../../config.json';
+import socket from '../../socket/socket.js';
+import {AuthContext} from "../authprovider/AuthProvider";
 
 const endpoints = configs.endpoints;
 const routes = configs.routes;
@@ -19,45 +21,29 @@ class TasksGrid extends React.Component {
     }
     load = () => {
         this.setState({isLoading: true});
-        RestRequest.get(endpoints.tasks)
-            .then(res => {
-                const tasks = res.data;
-                this.setState({isLoading: false, tasks: tasks});
-            })
-            .catch(reason => {
-                console.log(reason);
-                if (reason.response.status === 401 || reason.response.status === 403) {
-                    this.props.history.push(routes.login);
-                }
-            })
+        socket.on('allTasks', resp => this.setState({isLoading: false, tasks: resp.data}));
+        /* TODO add error component in content */
+        socket.on('serverError', resp => this.props.history.push('/error'));
+        console.log(this.context.currentUser);
+        socket.emit('tasks', this.context.currentUser.id);
     };
 
-    componentWillMount() {
+    componentDidMount() {
         this.load();
     }
 
     onUpdate = (task) => {
-        RestRequest.put(endpoints.tasks, task)
-            .then(res => {
-                this.load();
-            })
-            .catch(reason => {
-                if (reason.response.status === 401 || reason.response.status === 403) {
-                    this.props.history.push(routes.login);
-                }
-            })
+        socket.on('updatedTasks', resp => this.load());
+        /* TODO add error component in content */
+        socket.on('serverError', resp => this.props.history.push('/error'));
+        socket.emit('updateTask', task);
     };
 
     onDelete = (task) => {
-        RestRequest.delete(endpoints.tasks, task)
-            .then(res => {
-                this.load();
-            })
-            .catch(reason => {
-                if (reason.response.status === 401 || reason.response.status === 403) {
-                    this.props.history.push(routes.login);
-                }
-            })
+        socket.on('deletedTasks', resp => this.load());
+        /* TODO add error component in content */
+        socket.on('serverError', resp => this.props.history.push('/error'));
+        socket.emit('deleteTask', task);
     };
 
     onFileDelete = (data) => {
@@ -74,8 +60,10 @@ class TasksGrid extends React.Component {
 
     onFileDownload = (data) => {
         window.open(endpoints.tasks + '/file' + data.filepath);
+    };
+    daysLeft(date) {
+        return Math.ceil((new Date(date) - Date.now()) / (1000 * 3600*24));
     }
-
     render() {
         const masonryOptions = {
             itemSelector: '.Task',
@@ -109,11 +97,12 @@ class TasksGrid extends React.Component {
                                 };
                                 this.onUpdate.bind(null, newTask)();
                             }}
-                            onStartUpdate={() => this.componentWillMount()}
+                            onStartUpdate={() => this.load()}
                             onFileDelete={this.onFileDelete}
                             onFileDownload={this.onFileDownload}
                             color={task.color}
                             attachments={task.attachments}
+                            daysLeft={this.daysLeft(task.dueToDate)}
                         >
                             {task.description}
                         </Task>
@@ -124,4 +113,5 @@ class TasksGrid extends React.Component {
     }
 }
 
+TasksGrid.contextType = AuthContext;
 export default withRouter(TasksGrid);

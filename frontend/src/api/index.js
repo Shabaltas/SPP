@@ -1,5 +1,4 @@
-import Axios from 'axios';
-
+import Axios from "axios";
 import {endpoints} from '../config.json';
 
 const Methods = {
@@ -9,7 +8,6 @@ const Methods = {
     DELETE: 'delete'
 };
 
-export default {
     /*listTasks() {
         console.log("HERE GET TASKS");
         return Axios.get(`${apiPrefixTasks}`);
@@ -44,23 +42,18 @@ export default {
         return Axios.delete(`${apiPrefixTasks}/file`, {data});
     },*/
 
-    login(data) {
-        const Authorization = localStorage.getItem('Jwt token');
+    export const login = (data) => {
         return Axios.request({
             method: Methods.POST,
             url: `${endpoints.login}`,
-            data: data,
-            headers: {Authorization}
+            data: data
         });
-    },
+    };
 
-    registration(data) {
-        const Authorization = localStorage.getItem('Jwt token');
+    export const registration = (data) => {
         return Axios.request({
             method: Methods.POST,
             url: `${endpoints.registration}`,
-            data: data,
-            headers: {Authorization}
+            data: data
         });
-    }
-}
+    };

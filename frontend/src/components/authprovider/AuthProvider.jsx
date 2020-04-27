@@ -17,10 +17,10 @@ export default class AuthProvider extends React.Component {
         this.setState({user});
     };
 
-    login = (email, password) => {
+    login = (email, password) =>
         authService.login(email, password)
-            .then(response => this.updateCurrentUser(authService.getUserFromStorage()))
-    };
+            .then(response => this.updateCurrentUser(authService.getUserFromStorage()));
+    ;
 
     registration = (name,surname, email, password) => {
         authService.registration(name, surname, email, password)

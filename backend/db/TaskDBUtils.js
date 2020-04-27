@@ -9,12 +9,12 @@ function formatTask (data) {
         dueToDate: data.dueToDate,
         status: data.status || Statuses.toDo,
         color: data.color || '#ffffff',
-        attachments: data.attachments
+        userId: data.userId
     });
 }
 
-module.exports.allTasks = function () {
-    return Task.find();
+module.exports.allTasks = function (userId) {
+    return Task.find({'userId': userId});
 };
 
 module.exports.getTask = function (id) {
