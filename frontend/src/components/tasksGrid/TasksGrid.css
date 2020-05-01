@@ -1,4 +1,9 @@
 .TasksGrid {
     margin: 0 auto;
     width: available;
+    display: grid;
+    grid-template-areas:
+            "c c c";
+    grid-template-columns: 4fr 4fr 4fr;
+    grid-gap: 5px; /*расстояние между колонками*/
 }

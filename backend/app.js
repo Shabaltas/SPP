@@ -34,7 +34,7 @@ require('./db/CommonDBUtils').setUpConnection(uri, (err) => {
                 });
         });
         socket.on("updateTask", (data) => {
-            console.log("update tasks");
+            console.log("update tasks", data);
             taskDB.updateTask(data)
                 .then(data => {
                     if (data) {

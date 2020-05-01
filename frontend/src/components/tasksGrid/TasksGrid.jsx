@@ -1,15 +1,15 @@
 import './TasksGrid.css';
 import React from 'react';
-import Masonry from 'react-masonry-component';
-import Task from '../task/Task.jsx';
 import {withRouter} from 'react-router-dom';
-import {RestRequest} from "../../service/requestService";
-import configs from '../../config.json';
 import socket from '../../socket/socket.js';
 import {AuthContext} from "../authprovider/AuthProvider";
+import Column from "./column/Column";
+import { DndProvider } from 'react-dnd'
+import Backend from 'react-dnd-html5-backend'
 
-const endpoints = configs.endpoints;
-const routes = configs.routes;
+const Statuses = Object.freeze({
+    "toDo": 1, "inProgress": 2, "done": 3
+});
 
 class TasksGrid extends React.Component {
     constructor(props) {
@@ -19,12 +19,11 @@ class TasksGrid extends React.Component {
             tasks: []
         }
     }
-    load = () => {
-        this.setState({isLoading: true});
-        socket.on('allTasks', resp => this.setState({isLoading: false, tasks: resp.data}));
+
+    load() {
+        socket.on('allTasks', resp => this.setState({tasks: resp.data}));
         /* TODO add error component in content */
         socket.on('serverError', resp => this.props.history.push('/error'));
-        console.log(this.context.currentUser);
         socket.emit('tasks', this.context.currentUser.id);
     };
 
@@ -32,86 +31,31 @@ class TasksGrid extends React.Component {
         this.load();
     }
 
-    onUpdate = (task) => {
-        socket.on('updatedTasks', resp => this.load());
-        /* TODO add error component in content */
-        socket.on('serverError', resp => this.props.history.push('/error'));
-        socket.emit('updateTask', task);
-    };
-
-    onDelete = (task) => {
-        socket.on('deletedTasks', resp => this.load());
-        /* TODO add error component in content */
-        socket.on('serverError', resp => this.props.history.push('/error'));
-        socket.emit('deleteTask', task);
-    };
-
-    onFileDelete = (data) => {
-        RestRequest.delete(endpoints.tasks + '/file', data)
-            .then(res => {
-                this.load();
-            })
-            .catch(reason => {
-                if (reason.response.status === 401 || reason.response.status === 403) {
-                    this.props.history.push(routes.login);
-                }
-            })
-    };
-
-    onFileDownload = (data) => {
-        window.open(endpoints.tasks + '/file' + data.filepath);
-    };
-    daysLeft(date) {
-        return Math.ceil((new Date(date) - Date.now()) / (1000 * 3600*24));
+    tasksToDo() {
+        return this.state.tasks.filter(task => task.status === Statuses.toDo);
     }
-    render() {
-        const masonryOptions = {
-            itemSelector: '.Task',
-            columnWidth: 270,
-            gutter: 10,
-            isFitWidth: true
-        };
 
+    tasksInProgress() {
+        return this.state.tasks.filter(task => task.status === Statuses.inProgress);
+    }
+
+    tasksDone() {
+        return this.state.tasks.filter(task => task.status === Statuses.done);
+    }
+
+    render() {
         return (
-            <Masonry
-                className='TasksGrid'
-                options={masonryOptions}
-            >
-                {
-                    this.state.tasks.map(task =>
-                        <Task
-                            key={task._id}
-                            _id={task._id}
-                            title={task.title}
-                            onDelete={this.onDelete.bind(null, task)}
-                            forUpdate={uptask => {
-                                const newTask = {
-                                    _id: task._id,
-                                    title: uptask.title,
-                                    description: uptask.description,
-                                    creationDate: task.creationDate,
-                                    dueToDate: task.dueToDate,
-                                    status: task.status,
-                                    color: uptask.color,
-                                    attachments: task.attachments
-                                };
-                                this.onUpdate.bind(null, newTask)();
-                            }}
-                            onStartUpdate={() => this.load()}
-                            onFileDelete={this.onFileDelete}
-                            onFileDownload={this.onFileDownload}
-                            color={task.color}
-                            attachments={task.attachments}
-                            daysLeft={this.daysLeft(task.dueToDate)}
-                        >
-                            {task.description}
-                        </Task>
-                    )
-                }
-            </Masonry>
+            <DndProvider backend={Backend}>
+                <div className='TasksGrid'>
+                    <Column tasks={this.tasksToDo()} load={this.load.bind(this)} name='ToDo' greedy={false}/>
+                    <Column tasks={this.tasksInProgress()} load={this.load.bind(this)} name='InProgress' greedy={false}/>
+                    <Column tasks={this.tasksDone()} load={this.load.bind(this)} name='Done' greedy={false}/>
+                </div>
+            </DndProvider>
         );
     }
 }
 
 TasksGrid.contextType = AuthContext;
 export default withRouter(TasksGrid);
+

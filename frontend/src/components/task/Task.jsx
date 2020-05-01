@@ -1,9 +1,12 @@
 import React from 'react';
-
+import {withRouter} from 'react-router-dom';
 import './Task.css';
 import '../taskEditor/TaskEditor.css';
 import ColorPicker from "../colorPicker/ColorPicker.jsx";
 import {AuthContext} from "../authprovider/AuthProvider";
+
+const Statuses = Object.freeze({
+    "to do": 1, "in progress": 2, "done": 3});
 
 class Task extends React.Component {
 
@@ -15,7 +18,8 @@ class Task extends React.Component {
             title: this.props.title,
             color: this.props.color,
             daysLeft: this.props.daysLeft,
-            attachments: this.props.attachments
+            attachments: this.props.attachments,
+            status: this.props.status
         };
     };
 
@@ -25,6 +29,9 @@ class Task extends React.Component {
 
     handleTitleChange(event) {
         this.setState({title: event.target.value});
+    };
+    handleStatusChange(event) {
+        this.setState({status: event.target.value});
     };
 
     handleColorChange(newColor) {
@@ -36,7 +43,8 @@ class Task extends React.Component {
             title: this.state.title,
             description: this.state.description,
             color: this.state.color,
-            attachments: this.state.attachments
+            attachments: this.state.attachments,
+            status: this.state.status
         };
         this.props.forUpdate(newTask);
         this.setState({isUpdating: false})
@@ -109,26 +117,19 @@ class Task extends React.Component {
                         ? <h4 className='days_notice missed'>Missed</h4>
                         : <div className='days_notice'>Days left: {this.state.daysLeft}</div>
                 }
+                    <select className='status' onChange={(event) => {
+                        this.handleStatusChange.bind(this)(event);
+                        this.handleTaskUpdate.bind(this)();
+                    }} value={this.state.status}>
+                        <option value={1}>to do</option>
+                        <option value={2}>in progress</option>
+                        <option value={3}>done</option>
+                    </select>
 
-                {/*<div className='Task__attachments'>
-                    {
-                        this.props.attachments.map((file, i) => {
-                            const pathTofFile = `/${this.props._id}/${file}`;
-                            return (<File onFileDownload={() =>
-                                this.props.onFileDownload({filepath: `${pathTofFile}`})
-                            }
-                                          key={i} filepath={pathTofFile} filename={file} onFileDelete={() => {
-                                this.setState({attachments: this.props.attachments.splice(i, 1)});
-                                this.handleTaskUpdate.bind(this)();
-                                this.props.onFileDelete({filename: `${file}`, filepath: `${pathTofFile}`});
-                            }}/>)
-                        })
-                    }
-                </div>*/}
             </div>
         );
     }
 }
 
 Task.contextType = AuthContext;
-export default Task;
+export default withRouter(Task);
