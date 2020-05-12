@@ -6,7 +6,6 @@ const saltRounds = 10;
 const db = require("../db/UserDBUtils");
 
 router.post('/registration', (req, res) => {
-    console.log("reg", req.body);
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
        if (err) {
            console.log(err);
