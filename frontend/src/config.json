@@ -2,8 +2,7 @@
   "endpoints": {
     "login": "http://localhost:1234/login",
     "registration": "http://localhost:1234/registration",
-    "tasks": "http://localhost:1234/tasks",
-    "tasksCreate": "http://localhost:1234/tasks/create"
+    "graphql": "http://localhost:1234/graphql"
   },
   "routes": {
     "tasks": "/tasks",

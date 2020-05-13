@@ -6,7 +6,6 @@ const root = {
     FileUpload: GraphQLUpload,
     Date: Date,
     tasks: ({userId}) => {
-        console.log(userId);
         return taskDB.allTasks(Mongoose.Types.ObjectId(userId))
             .then(data => data)
             .catch(err => err)
@@ -31,7 +30,12 @@ const root = {
     deleteTask: ({_id}) => {
         //TODO delete attachments
         return taskDB.deleteTask(Mongoose.Types.ObjectId(_id))
-            .then(data => data.ok)
+            .then(data => {
+                return {
+                    deleted: data.deletedCount,
+                    found: data.n
+                }
+            })
             .catch(err => err)
     }
 };

@@ -10,8 +10,13 @@ const schema = buildSchema(`
  
  type Mutation {
     createTask(title: String!, description: String!, dueToDate: Date!, color: String, userId: String!): Task!
-    updateTask(_id: String!, title: String!, description: String!, status: String, dueToDate: Date!, color: String): Task!
-    deleteTask(_id: String!): Int!
+    updateTask(_id: String!, title: String!, description: String!, color: String, status: Int): Task!
+    deleteTask(_id: String!): DeletionResult!
+ }
+    
+ type DeletionResult {
+    deleted: Int!
+    found: Int
  }
  
  type Task {
@@ -19,7 +24,7 @@ const schema = buildSchema(`
      title: String!
      description: String!
      dueToDate: Date!
-     status: String!
+     status: Int!
      color: String!
      userId: ID!
  }
