@@ -1,13 +1,13 @@
 {
   "serverPort": 1234,
   "auth": {
-    "secretKey": "2cf05d94dbYMiMbaQl6I",
+    "secretKey": "",
     "expires": "1h"
   },
   "db": {
-    "host": "sppcluster-f9p2h.mongodb.net",
+    "host": "",
     "port": 27017,
-    "user": "root",
-    "password": "root"
+    "user": "",
+    "password": ""
   }
 }

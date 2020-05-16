@@ -6,7 +6,8 @@ import ColorPicker from "../colorPicker/ColorPicker.jsx";
 import {AuthContext} from "../authprovider/AuthProvider";
 
 const Statuses = Object.freeze({
-    "to do": 1, "in progress": 2, "done": 3});
+    "to do": 1, "in progress": 2, "done": 3
+});
 
 class Task extends React.Component {
 
@@ -30,8 +31,17 @@ class Task extends React.Component {
     handleTitleChange(event) {
         this.setState({title: event.target.value});
     };
+
     handleStatusChange(event) {
-        this.setState({status: event.target.value});
+        const newTask = {
+            title: this.state.title,
+            description: this.state.description,
+            color: this.state.color,
+            attachments: this.state.attachments,
+            status: event.target.value
+        };
+        this.props.forUpdate(newTask);
+        this.setState({isUpdating: false, status: event.target.value});
     };
 
     handleColorChange(newColor) {
@@ -112,19 +122,18 @@ class Task extends React.Component {
                      onChange={this.handleDescriptionChange.bind(this)}>{this.props.children}</div>
                 {
                     this.state.daysLeft === 0
-                    ? <h5 className='days_notice today'>Today</h5>
-                    : this.state.daysLeft < 0
+                        ? <h5 className='days_notice today'>Today</h5>
+                        : this.state.daysLeft < 0
                         ? <h4 className='days_notice missed'>Missed</h4>
                         : <div className='days_notice'>Days left: {this.state.daysLeft}</div>
                 }
-                    <select className='status' onChange={(event) => {
-                        this.handleStatusChange.bind(this)(event);
-                        this.handleTaskUpdate.bind(this)();
-                    }} value={this.state.status}>
-                        <option value={1}>to do</option>
-                        <option value={2}>in progress</option>
-                        <option value={3}>done</option>
-                    </select>
+                <select className='status' onChange={(event) => {
+                    this.handleStatusChange.bind(this)(event);
+                }} value={this.state.status}>
+                    <option value={1}>to do</option>
+                    <option value={2}>in progress</option>
+                    <option value={3}>done</option>
+                </select>
 
             </div>
         );
